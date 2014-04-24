@@ -1,6 +1,6 @@
 {
   "name": "angular-ff-addon-compat",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "angular compatibility mode for firefox addons",
   "keywords": [
     "angular",
