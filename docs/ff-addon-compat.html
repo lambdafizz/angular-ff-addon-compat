@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>lf.ff-addon-compat</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="lf-ff-addon-compat">lf.ff-addon-compat</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(angular)</span> {</span>
+<span class="hljs-pi">    'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The purpose of this module is to provide a “drop in” compatibility
+mode allowing angular to run seamlessly as firefox content script
+(or to be usable in firefox addons, if you prefer to put it this
+way)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    angular.module(<span class="hljs-string">'lf.ff-addon-compat'</span>, [])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h2 id="-sniffer">$sniffer</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>This provider is mostly a copypasta of <code>src/ng/sniffer.js</code> with one
+minor tweak that is commented below.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .provider(<span class="hljs-string">'$sniffer'</span>, [<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>angular has pretty complicated build system with some global helpers
+that become non-global at build time. We need to provide these helpers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> int = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> {</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(i); };
+            <span class="hljs-keyword">var</span> lowercase = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(s)</span> {</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">String</span>(s).toLowerCase(); };
+            <span class="hljs-keyword">var</span> isString = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(o)</span> {</span> <span class="hljs-keyword">return</span> o <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">String</span>; };
+            <span class="hljs-keyword">var</span> isUndefined = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(o)</span> {</span> <span class="hljs-keyword">return</span> o === <span class="hljs-literal">undefined</span>; };
+            <span class="hljs-keyword">var</span> msie = <span class="hljs-literal">false</span>; <span class="hljs-comment">// firefox plugin, so we're not IE :)</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>inside firefox addon csp should probably be false (or maybe not?)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> csp = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; };
+
+            <span class="hljs-comment">/**
+             * !!! This is an undocumented "private" service !!!
+             *
+             * @name $sniffer
+             * @requires $window
+             * @requires $document
+             *
+             * @property {boolean} history Does the browser support html5 history api ?
+             * @property {boolean} hashchange Does the browser support hashchange event ?
+             * @property {boolean} transitions Does the browser support CSS transition events ?
+             * @property {boolean} animations Does the browser support CSS animation events ?
+             *
+             * @description
+             * This is very simple implementation of testing browser's features.
+             */</span>
+            <span class="hljs-keyword">this</span>.$get = [<span class="hljs-string">'$window'</span>, <span class="hljs-string">'$document'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($window, $document)</span> {</span>
+                <span class="hljs-keyword">var</span> eventSupport = {},
+                    android =
+                        int((<span class="hljs-regexp">/android (\d+)/</span>.exec(lowercase(($window.navigator || {}).userAgent)) || [])[<span class="hljs-number">1</span>]),
+                    boxee = <span class="hljs-regexp">/Boxee/i</span>.test(($window.navigator || {}).userAgent),
+                    document = $document[<span class="hljs-number">0</span>] || {},
+                    documentMode = document.documentMode,
+                    vendorPrefix,
+                    vendorRegex = <span class="hljs-regexp">/^(Moz|webkit|O|ms)(?=[A-Z])/</span>,
+                    bodyStyle = document.body &amp;&amp; document.body.style,
+                    transitions = <span class="hljs-literal">false</span>,
+                    animations = <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>unsafeWindow is a global available only for scripts running
+as FF addon “content script”. As stated in FF docs it is a
+private, unsupported API that can disappear, but it’s the simplest
+way to check if we’re running in context of an addon.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    ffPlugin = $window.XPCNativeWrapper !== <span class="hljs-literal">undefined</span>,
+                    match;
+
+                <span class="hljs-keyword">if</span> (bodyStyle) {
+                    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> bodyStyle) {
+                        match = vendorRegex.exec(prop);
+                        <span class="hljs-keyword">if</span>(match) {
+                            vendorPrefix = match[<span class="hljs-number">0</span>];
+                            vendorPrefix = vendorPrefix.substr(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).toUpperCase() + vendorPrefix.substr(<span class="hljs-number">1</span>);
+                            <span class="hljs-keyword">break</span>;
+                        }
+                    }
+
+                    <span class="hljs-keyword">if</span>(!vendorPrefix) {
+                        vendorPrefix = (<span class="hljs-string">'WebkitOpacity'</span> <span class="hljs-keyword">in</span> bodyStyle) &amp;&amp; <span class="hljs-string">'webkit'</span>;
+                    }
+
+                    transitions = !!((<span class="hljs-string">'transition'</span> <span class="hljs-keyword">in</span> bodyStyle) || (vendorPrefix + <span class="hljs-string">'Transition'</span> <span class="hljs-keyword">in</span> bodyStyle));
+                    animations  = !!((<span class="hljs-string">'animation'</span> <span class="hljs-keyword">in</span> bodyStyle) || (vendorPrefix + <span class="hljs-string">'Animation'</span> <span class="hljs-keyword">in</span> bodyStyle));
+
+                    <span class="hljs-keyword">if</span> (android &amp;&amp; (!transitions||!animations)) {
+                        transitions = isString(document.body.style.webkitTransition);
+                        animations = isString(document.body.style.webkitAnimation);
+                    }
+                }
+
+
+                <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Android has history.pushState, but it does not update location correctly
+so let’s not use the history API at all.
+<a href="http://code.google.com/p/android/issues/detail?id=17471">http://code.google.com/p/android/issues/detail?id=17471</a>
+<a href="https://github.com/angular/angular.js/issues/904">https://github.com/angular/angular.js/issues/904</a></p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>older webkit browser (533.9) on Boxee box has exactly the same problem as Android has
+so let’s not use the history API also
+We are purposefully using <code>!(android &lt; 4)</code> to cover the case when <code>android</code> is undefined</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>If <code>XPCNativeWrapper</code> is defined, we are running as FF addon content script,
+and <code>history.pushState</code> and <code>history.replaceState</code> will cause painful and <em>silent</em>
+failures, so we must assume this api is unavailable.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>jshint -W018</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    history: !!($window.history &amp;&amp; $window.history.pushState &amp;&amp; !(android &lt; <span class="hljs-number">4</span>) &amp;&amp; !boxee &amp;&amp;
+                        !ffPlugin),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>jshint +W018</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    hashchange: <span class="hljs-string">'onhashchange'</span> <span class="hljs-keyword">in</span> $window &amp;&amp;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>IE8 compatible mode lies</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        (!documentMode || documentMode &gt; <span class="hljs-number">7</span>),
+                    hasEvent: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(event)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>IE9 implements ‘input’ event it’s so fubared that we rather pretend that it doesn’t have
+it. In particular the event is not fired when backspace or delete key are pressed or
+when cut operation is performed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (event == <span class="hljs-string">'input'</span> &amp;&amp; msie == <span class="hljs-number">9</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+                        <span class="hljs-keyword">if</span> (isUndefined(eventSupport[event])) {
+                            <span class="hljs-keyword">var</span> divElm = document.createElement(<span class="hljs-string">'div'</span>);
+                            eventSupport[event] = <span class="hljs-string">'on'</span> + event <span class="hljs-keyword">in</span> divElm;
+                        }
+
+                        <span class="hljs-keyword">return</span> eventSupport[event];
+                    },
+                    csp: csp(),
+                    vendorPrefix: vendorPrefix,
+                    transitions : transitions,
+                    animations : animations,
+                    android: android,
+                    msie : msie,
+                    msieDocumentMode: documentMode,
+                    ffAddonCompat: <span class="hljs-literal">true</span>
+                };
+            }];
+
+        }]);
+
+
+})(window.angular);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
