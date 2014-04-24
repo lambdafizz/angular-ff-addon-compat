@@ -1,6 +1,6 @@
 {
   "name": "angular-ff-addon-compat",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "angular compatibility mode for firefox addons",
   "keywords": [
     "angular",
@@ -16,7 +16,6 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components"
   ],
