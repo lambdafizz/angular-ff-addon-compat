@@ -1,0 +1,21 @@
+<html>
+<head>
+    <style>
+        .view-container {
+            border: 1px solid gray;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body ng-app="app">
+    <ul>
+        <li><a href="#/route-1">1<sup>st</sup> route</a></li>
+        <li><a href="#/route-2">2<sup>nd</sup> route</a></li>
+        <li><a href="#/route-3">3<sup>rd</sup> route</a></li>
+    </ul>
+    <hr>
+    <div class="view-container">
+        <div ng-view></div>
+    </div>
+</body>
+</html>

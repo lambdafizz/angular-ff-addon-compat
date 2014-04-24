@@ -1,0 +1,9 @@
+{
+  "name": "example-plugin",
+  "title": "example-plugin",
+  "id": "jid1-Wlr6zwDFxXSMlg",
+  "description": "a basic add-on",
+  "author": "",
+  "license": "MPL 2.0",
+  "version": "0.1"
+}
